@@ -10,10 +10,19 @@ module CarrierWave
         #   crop_uploaded :avatar
         #
         # @param attachment [Symbol] Name of the attachment attribute to be cropped
-        def crop_uploaded(attachment)
+        def crop_uploaded(attachment, background: false)
 
-          [:crop_x, :crop_y, :crop_w, :crop_h].each do |a|
-            attr_accessor :"#{attachment}_#{a}"
+          if background
+            define_method :"#{attachment}_crop_updated?" do
+                send(:"#{attachment}_crop_x_changed?") ||
+                  send(:"#{attachment}_crop_y_changed?") ||
+                    send(:"#{attachment}_crop_w_changed?") ||
+                      send(:"#{attachment}_crop_h_changed?")
+            end
+          else
+            [:crop_x, :crop_y, :crop_w, :crop_h].each do |a|
+              attr_accessor :"#{attachment}_#{a}"
+            end
           end
           after_update :"recreate_#{attachment}_versions"
 
@@ -59,12 +68,12 @@ module CarrierWave
     module Uploader
 
       # Performs cropping.
-      #  
-      #  On original version of attachment
-      #  process crop: :avatar  
       #
-      #  Resizes the original image to 600x600 and then performs cropping 
-      #  process crop: [:avatar, 600, 600]  
+      #  On original version of attachment
+      #  process crop: :avatar
+      #
+      #  Resizes the original image to 600x600 and then performs cropping
+      #  process crop: [:avatar, 600, 600]
       #
       # @param attachment [Symbol] Name of the attachment attribute to be cropped
       def crop(attachment, width = nil, height = nil)

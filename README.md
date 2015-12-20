@@ -106,6 +106,39 @@ If there are no versions, and original file is to be cropped directly then call 
 
     process crop: :avatar
 
+##Integration with carrierwave_backgrounder
+
+  These instructions assume you have previously set up [carrierwave_backgrounder](https://github.com/lardawge/carrierwave_backgrounder)
+
+  1. Add additional fields into DB to store crop options:
+
+  ```ruby
+  rails g migration add_<attachment>_crop_to_events <attachment>_crop_x:integer <attachment>_crop_y:integer <attachment>_crop_w:integer <attachment>_crop_h:integer
+  ```
+  Example for image attachment:
+
+  ```ruby
+  rails g migration add_image_crop_to_events image_crop_x:integer image_crop_y:integer image_crop_w:integer image_crop_h:integer
+  ```
+  2. Set background option as true (background: true) for attachment, in model:
+
+  ```ruby
+  class Event < ActiveRecord::Base
+    ...
+    crop_uploaded :<attachment>, background: true
+    ...
+  end
+  ```
+
+  Example for image attachment:
+  ```ruby
+  class Event < ActiveRecord::Base
+    ...
+    crop_uploaded :image, background: true
+    ...
+  end
+  ```
+
 ##NOTES
 
 1. Current Documentation is for **CarrierWave-Crop v0.1.2**
