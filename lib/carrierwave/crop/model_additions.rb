@@ -76,7 +76,7 @@ module CarrierWave
       #  process crop: [:avatar, 600, 600]
       #
       # @param attachment [Symbol] Name of the attachment attribute to be cropped
-      def crop(attachment, width = nil, height = nil)
+      def crop_old(attachment, width = nil, height = nil) # no need for the new CarrierWave version
         if model.cropping?(attachment)
           x = model.send("#{attachment}_crop_x").to_i
           y = model.send("#{attachment}_crop_y").to_i
