@@ -1,3 +1,8 @@
+## CarrierWave-Crop v0.2.2
+  * Integrate carrierwave_backgrounder
+  * Update bundler version
+  * Remove `crop` method to use default cropping in the new CarrierWave version
+
 ## CarrierWave-Crop v0.2.0
    * fixes for compatibility with rails 5
 
